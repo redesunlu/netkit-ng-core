@@ -571,7 +571,7 @@ else
 fi
 
 # Append a boot option that specifies the root filesystem
-KERNELCMD="$KERNELCMD root=98:1"
+KERNELCMD="$KERNELCMD root=98:0"
 # The following root= options should also be valid
 # KERNELCMD="$KERNELCMD root=/dev/ubd/disc0/part1"
 # KERNELCMD="$KERNELCMD root=/dev/ubda1"
