@@ -53,11 +53,11 @@ package: build
 build: clean
 	mkdir $(BUILD_DIR)
 	cp -rf $(UML_TOOLS_DIR) $(UML_TOOLS_BUILD_DIR)
-	for PATCH in $(shell find $(PATCHES_DIR) -type f); do \
+	for PATCH in $(shell ls -d -1 $(PATCHES_DIR)*); do \
+		echo "============="; \
 		cat $${PATCH} | patch -d $(UML_TOOLS_BUILD_DIR) -p1; \
 	done
 	(cd $(UML_TOOLS_BUILD_DIR) && $(MAKE) SIZE_ARCH=$(SIZE_ARCH) && cd -)
-
 
 clean:
 	cd bin; find . -mindepth 1 -maxdepth 1 -type l -exec unlink {} ";"
