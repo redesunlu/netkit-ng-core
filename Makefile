@@ -6,7 +6,7 @@ export $(SIZE_ARCH)
 NK_VERSION=$(shell awk '/ version [0-9]/ {print $$NF}' netkit-version)
 
 SRC_DIR=src
-UML_TOOLS_DIR=$(SRC_DIR)/tools-20070815/
+UML_TOOLS_DIR=$(SRC_DIR)
 PATCHES_DIR=$(SRC_DIR)/patches/
 BUILD_DIR=build
 UML_TOOLS_BUILD_DIR=$(BUILD_DIR)/uml_tools/
@@ -53,10 +53,6 @@ package: build
 build: clean
 	mkdir $(BUILD_DIR)
 	cp -rf $(UML_TOOLS_DIR) $(UML_TOOLS_BUILD_DIR)
-	for PATCH in $(shell ls -d -1 $(PATCHES_DIR)*); do \
-		echo "============="; \
-		cat $${PATCH} | patch -d $(UML_TOOLS_BUILD_DIR) -p1; \
-	done
 	(cd $(UML_TOOLS_BUILD_DIR) && $(MAKE) SIZE_ARCH=$(SIZE_ARCH) && cd -)
 
 clean:
