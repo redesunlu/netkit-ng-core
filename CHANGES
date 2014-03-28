@@ -1,3 +1,7 @@
+2.12
+  - patches are included in git from now
+  - moving to new root filesystem from netkit-uml-build
+
 2.11
   - It is now possible to run only bin/manage_tuntap script via sudo, not 
     /bin/sh. (sv75)

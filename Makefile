@@ -6,7 +6,7 @@ export $(SIZE_ARCH)
 NK_VERSION=$(shell awk '/ version [0-9]/ {print $$NF}' netkit-version)
 
 SRC_DIR=src
-UML_TOOLS_DIR=$(SRC_DIR)/tools-20070815/
+UML_TOOLS_DIR=$(SRC_DIR)
 PATCHES_DIR=$(SRC_DIR)/patches/
 BUILD_DIR=build
 UML_TOOLS_BUILD_DIR=$(BUILD_DIR)/uml_tools/
@@ -36,7 +36,7 @@ help:
 
 package: build
 	mkdir $(NETKIT_BUILD_DIR)
-	cp -r bin  CHANGES check_configuration.d  check_configuration.sh  COPYING  INSTALL  man  netkit.conf  Netkit-konsole.profile  netkit-version  README $(NETKIT_BUILD_DIR)
+	cp -r bin  CHANGES check_configuration.d  check_configuration.sh COPYING  INSTALL  man  netkit.conf  tools/Netkit-konsole.profile  netkit-version  README $(NETKIT_BUILD_DIR)
 	mkdir  $(NETKIT_BUILD_DIR)$(UML_TOOLS_BIN_DIR)
 	cp $(UML_TOOLS_BUILD_DIR)/uml_switch/uml_switch $(NETKIT_BUILD_DIR)$(UML_TOOLS_BIN_DIR)
 	cp $(UML_TOOLS_BUILD_DIR)/port-helper/port-helper $(NETKIT_BUILD_DIR)$(UML_TOOLS_BIN_DIR)
@@ -53,11 +53,7 @@ package: build
 build: clean
 	mkdir $(BUILD_DIR)
 	cp -rf $(UML_TOOLS_DIR) $(UML_TOOLS_BUILD_DIR)
-	for PATCH in $(shell find $(PATCHES_DIR) -type f); do \
-		cat $${PATCH} | patch -d $(UML_TOOLS_BUILD_DIR) -p1; \
-	done
 	(cd $(UML_TOOLS_BUILD_DIR) && $(MAKE) SIZE_ARCH=$(SIZE_ARCH) && cd -)
-
 
 clean:
 	cd bin; find . -mindepth 1 -maxdepth 1 -type l -exec unlink {} ";"
