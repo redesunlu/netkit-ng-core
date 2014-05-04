@@ -1,4 +1,4 @@
-Welcome to Netkit version 2.12
+Welcome to Netkit version 3.0
 
 
 WHAT IS NETKIT
@@ -90,12 +90,12 @@ CREDITS AND CONTACTS
 This distribution has been released by the Computer Networks (CompuNet) Research
 Group at the University of Roma Tre (http://www.dia.uniroma3.it).  People
 involved in the project include (but are not limited to):
-Giuseppe Di Battista
-Maurizio Patrignani
-Stefano Pettini
-Maurizio Pizzonia
-Fabio Ricci
-Massimo Rimondini
+- Giuseppe Di Battista
+- Maurizio Patrignani
+- Stefano Pettini
+- Maurizio Pizzonia
+- Fabio Ricci
+- Massimo Rimondini
 
 The project has been carried on in the past with significant contributions from
 the Linux User Group "LUG Roma Tre" (http://www.lugroma3.org).
@@ -104,7 +104,7 @@ Apart from people from CompuNet and from the LUG, another special mention is due
 for contributions provided by Andrea Cecchetti, Lorenzo Colitti, Federico
 Mariani, and Flavia Picard.
 
-The update to new version of debian is managed by Julien Iguchi-Cartigny.
+The update to Debian wheezy has been released by Julien Iguchi-Cartigny.
 
 The current official Netkit site is http://www.netkit.org/. Here you can find the
 Netkit distribution itself and also some additional resources (e.g., some labs).
