@@ -1,3 +1,8 @@
+3.0
+  - switching to new major version, as executables are expecting new fs
+    organization
+  - moving console profile to tools directory
+
 2.12
   - patches are included in git from now
   - moving to new root filesystem from netkit-uml-build
