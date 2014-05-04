@@ -13,6 +13,9 @@ UML_TOOLS_BUILD_DIR=$(BUILD_DIR)/uml_tools/
 NETKIT_BUILD_DIR=$(BUILD_DIR)/netkit/
 UML_TOOLS_BIN_DIR=bin/uml_tools/
 
+FINAL_ARCHIVE="../netkit-core-$(NK_VERSION)-$(SIZE_ARCH).tar.bz2"
+
+
 DEBIAN_VERSION=`cat /etc/debian_version | cut -c 1`
 
 .PHONY: default help pack
@@ -48,7 +51,7 @@ package: build
 	cp $(UML_TOOLS_BUILD_DIR)/uml_dump/uml_dump $(NETKIT_BUILD_DIR)$(UML_TOOLS_BIN_DIR)
 
 	(cd $(NETKIT_BUILD_DIR)bin &&  ln -s lstart lrestart; ln -s lstart ltest; find uml_tools -mindepth 1 -maxdepth 1 -type f -exec ln -s {} ';' && cd -)
-	tar -C $(BUILD_DIR) --owner=0 --group=0 -cjf "../netkit-core-$(NK_VERSION)-$(SIZE_ARCH).tar.bz2" netkit/
+	tar -C $(BUILD_DIR) --owner=0 --group=0 -cjf $(FINAL_ARCHIVE) netkit/
 
 build: clean
 	mkdir $(BUILD_DIR)
@@ -58,4 +61,4 @@ build: clean
 clean:
 	cd bin; find . -mindepth 1 -maxdepth 1 -type l -exec unlink {} ";"
 	rm -rf $(BUILD_DIR)
-	rm -f ../netkit-core-$(NK_VERSION)-$(SIZE_ARCH).tar.bz2
+	rm -f $(FINAL_ARCHIVE)
