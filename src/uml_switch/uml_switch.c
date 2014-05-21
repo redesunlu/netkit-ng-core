@@ -7,9 +7,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <fcntl.h>
-#include <stdint.h>
 #include <sys/socket.h>
-#include <sys/un.h>
 #include <sys/poll.h>
 #include <sys/time.h>
 #include <unistd.h>
@@ -19,6 +17,7 @@
 #ifdef TUNTAP
 #include "tuntap.h"
 #endif
+#include "uml_switch.h"
 
 #ifdef notdef
 #include <stddef.h>
@@ -26,57 +25,6 @@
 
 static int hub = 0;
 static int compat_v0 = 0;
-
-enum request_type { REQ_NEW_CONTROL };
-
-struct request_v0 {
-  enum request_type type;
-  union {
-    struct {
-      unsigned char addr[ETH_ALEN];
-      struct sockaddr_un name;
-    } new_control;
-  } u;
-};
-
-#define SWITCH_MAGIC 0xfeedface
-
-struct request_v1 {
-  uint32_t magic;
-  enum request_type type;
-  union {
-    struct {
-      unsigned char addr[ETH_ALEN];
-      struct sockaddr_un name;
-    } new_control;
-  } u;
-};
-
-struct request_v2 {
-  uint32_t magic;
-  uint32_t version;
-  enum request_type type;
-  struct sockaddr_un sock;
-};
-
-struct reply_v2 {
-  unsigned char mac[ETH_ALEN];
-  struct sockaddr_un sock;
-};
-
-struct request_v3 {
-  uint32_t magic;
-  uint32_t version;
-  enum request_type type;
-  struct sockaddr_un sock;
-};
-
-union request {
-  struct request_v0 v0;
-  struct request_v1 v1;
-  struct request_v2 v2;
-  struct request_v3 v3;
-};
 
 static char *ctl_socket = "/tmp/uml.ctl";
 
@@ -149,7 +97,11 @@ static void new_port_v0(int fd, struct request_v0 *req, int data_fd)
 {
   switch(req->type){
   case REQ_NEW_CONTROL:
-    setup_sock_port(fd, &req->u.new_control.name, data_fd);
+    setup_sock_port(fd, &req->u.new_control.name, data_fd, 0);
+    break;
+  case REQ_NEW_DUMP:
+    printf("REQ_NEW_DUMP for version 0 not supported\n");
+    close_descriptor(fd);
     break;
   default:
     printf("Bad request type : %d\n", req->type);
@@ -164,7 +116,8 @@ static void new_port_v1_v3(int fd, enum request_type type,
 
   switch(type){
   case REQ_NEW_CONTROL:
-    err = setup_sock_port(fd, sock, data_fd);
+  case REQ_NEW_DUMP:
+    err = setup_sock_port(fd, sock, data_fd, (type == REQ_NEW_DUMP));
     if(err) return;
     n = write(fd, &data_sun, sizeof(data_sun));
     if(n != sizeof(data_sun)){
@@ -209,6 +162,9 @@ static void new_port(int fd, int data_fd)
     else if(req.v2.version > 2) 
       fprintf(stderr, "Request for a version %d port, which this "
 	      "uml_switch doesn't support\n", req.v2.version);
+    else if(req.v1.type == REQ_NEW_DUMP) 
+      fprintf(stderr, "REQ_NEW_DUMP request for version 1, which this "
+	      "uml_switch doesn't support\n");
     else new_port_v1_v3(fd, req.v1.type, &req.v1.u.new_control.name, data_fd);
   }
   else new_port_v0(fd, &req.v0, data_fd);
