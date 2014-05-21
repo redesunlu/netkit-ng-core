@@ -39,7 +39,7 @@ help:
 
 package: build
 	mkdir $(NETKIT_BUILD_DIR)
-	cp -r bin  CHANGES check_configuration.d  check_configuration.sh COPYING  INSTALL  man  netkit.conf  tools/Netkit-konsole.profile  netkit-version  README $(NETKIT_BUILD_DIR)
+	cp -r bin  CHANGES check_configuration.d  check_configuration.sh COPYING  INSTALL  man  netkit.conf  tools/Netkit-konsole.profile  netkit-version  README.mdown $(NETKIT_BUILD_DIR)
 	mkdir  $(NETKIT_BUILD_DIR)$(UML_TOOLS_BIN_DIR)
 	cp $(UML_TOOLS_BUILD_DIR)/uml_switch/uml_switch $(NETKIT_BUILD_DIR)$(UML_TOOLS_BIN_DIR)
 	cp $(UML_TOOLS_BUILD_DIR)/port-helper/port-helper $(NETKIT_BUILD_DIR)$(UML_TOOLS_BIN_DIR)
