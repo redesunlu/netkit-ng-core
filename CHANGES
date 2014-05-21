@@ -1,3 +1,6 @@
+3.0.1
+  - fixing error during README.mdown copy into archive during build
+
 3.0
   - switching to new major version, as executables are expecting new fs
     organization
