@@ -1,4 +1,20 @@
-Welcome to Netkit version 3.0.1
+Welcome to Netkit-NG version 3.0.2
+
+WHAT IS NETKIT-NG
+-----------------
+
+Netkit-NG is an updated version of the Netkit binaries, filesystem and kernel.
+It includes an updated version of `netkit-core` which supports the new fs image 
+format and includes other contributions released by various github users:
+
+* support for uml-dump, an user-space way to sniff uml switches
+* run only bin/manage_tuntap script via sudo, not /bin/sh (thanks Vsevolod)
+* add Ktabstart, a tool to run netkit session within konsole tabs (thanks [sv75](https://github.com/sv75))
+* rename vconfig tool in vconf (thanks [zioproto](https://github.com/zioproto))
+* better looking excludes in Makefile (thanks [Markus Stenberg](https://github.com/fingon))
+* sources of the uml tools in `src/` directory
+* removing previous uml tools binaries
+* removing obsolete goals in Makefile
 
 WHAT IS NETKIT
 --------------
@@ -20,7 +36,6 @@ software resources integrated into Netkit.
 
 The project was born (and is still carried on) with the main purpose of
 supporting teaching of networking subjects with realistic experiences.
-
 
 SYSTEM REQUIREMENTS
 -------------------
