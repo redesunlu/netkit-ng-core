@@ -10,32 +10,15 @@ UML_TOOLS_DIR=$(SRC_DIR)
 PATCHES_DIR=$(SRC_DIR)/patches/
 BUILD_DIR=build
 UML_TOOLS_BUILD_DIR=$(BUILD_DIR)/uml_tools/
-NETKIT_BUILD_DIR=$(BUILD_DIR)/netkit/
+NETKIT_BUILD_DIR=$(BUILD_DIR)/netkit-ng/
 UML_TOOLS_BIN_DIR=bin/uml_tools/
 
-FINAL_ARCHIVE="../netkit-core-$(NK_VERSION)-$(SIZE_ARCH).tar.bz2"
+FINAL_ARCHIVE="netkit-ng-core-$(SIZE_ARCH)-$(NK_VERSION).tar.bz2"
 
 
 DEBIAN_VERSION=`cat /etc/debian_version | cut -c 1`
 
-.PHONY: default help pack
-
-default: help
-
-help:
-	@echo
-	@echo -e "\e[1mAvailable targets are:\e[0m"
-	@echo
-	@echo -e "  \e[1mpackage\e[0m    Create a distributable tarball of Netkit."
-	@echo
-	@echo -e "  \e[1mbuild\e[0m      Patch then build the uml tools."
-	@echo
-	@echo -e "  \e[1mclean\e[0m      Clean the building directories and the uml-tools binaries."
-	@echo
-	@echo "The above targets only affect the core Netkit distribution."
-	@echo "In order to also package the kernel and/or filesystem, please"
-	@echo "run the corresponding Makefile in the applicable directory."
-	@echo
+.PHONY: default pack
 
 package: build
 	mkdir $(NETKIT_BUILD_DIR)
@@ -51,7 +34,7 @@ package: build
 	cp $(UML_TOOLS_BUILD_DIR)/uml_dump/uml_dump $(NETKIT_BUILD_DIR)$(UML_TOOLS_BIN_DIR)
 
 	(cd $(NETKIT_BUILD_DIR)bin &&  ln -s lstart lrestart; ln -s lstart ltest; find uml_tools -mindepth 1 -maxdepth 1 -type f -exec ln -s {} ';' && cd -)
-	tar -C $(BUILD_DIR) --owner=0 --group=0 -cjf $(FINAL_ARCHIVE) netkit/
+	tar -C $(BUILD_DIR) --owner=0 --group=0 -cjf $(FINAL_ARCHIVE) netkit-ng
 
 build: clean
 	mkdir $(BUILD_DIR)
