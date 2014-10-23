@@ -421,8 +421,6 @@ if containsRegexp PWD " "; then
    exit 1
 fi
 
-# Check wh
-
 # Check whether the requested terminal emulator application exists
 if [ $VM_CON0 = "xterm" -o $VM_CON1 = "xterm" ]; then
    # Look for user specified terminal application or, if none has been specified,
@@ -523,6 +521,21 @@ setupInterfaces() {
 
 : ${VM_FS:="${PWD}/${VM_NAME}.disk"}
 KERNELCMD="$VM_KERNEL"
+
+check_filesystem() {
+   FS_TYPE=`stat -f $2 | grep -w Type`
+   FS_TYPE=${FS_TYPE#*Type: }
+   if echo $FS_TYPE | grep -vqE "(ext[2,3,4])|(ntfs)|(ntfs-3g)|(fuse)|(reiser)|(jfs)|(xfs)"; then
+      warning "$SCRIPTNAME" "$CMDLINE" "$1" "Filesystem $FS_TYPE does not seems to support sparse file $2. This may result in dramatic performance loss and disk space consumption."
+   fi
+}
+
+# Check if model fs or cow fs are on a filesystem supporting sparse file
+if [ -z "$USE_MODEL_FS" ]; then
+   check_filesystem $0 $VM_MODEL_FS
+else
+   check_filesystem $0 $VM_FS
+fi
 
 if [ -z "$BE_QUIET" ]; then
    echo
