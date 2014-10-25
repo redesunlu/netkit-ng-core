@@ -285,6 +285,7 @@ History
 
 Version 3.0.3
 * Fix #3: check-configuration script returns warning about parse file not supported on ext4
+* force LANG_C to all scripts to avoid internationalization errors
 * Fix #4: Missing dynamic library dependency when calling vhalt
 * Add tests to check if filesystem supports sparse file for FS and model FS
 
