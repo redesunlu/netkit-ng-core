@@ -26,6 +26,9 @@
 FIXMODE=0
 ISSUE_WARNING=0
 
+# force language to avoid localization errors
+export LANG=C
+
 # Use the correct syntax for echo, depending on the shell being used
 if type source > /dev/null 2>&1; then
    # We are using bash

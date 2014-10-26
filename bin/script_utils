@@ -24,6 +24,9 @@
 # Here we assume that the NETKIT_HOME environment variable has been properly set
 # (other scripts will take care about that).
 
+# force language to avoid localization errors
+export LANG=C
+
 # Read Netkit configuration
 [ -f /etc/netkit.conf ] && . "/etc/netkit.conf"
 [ -f "$NETKIT_HOME/netkit.conf" ] && . "$NETKIT_HOME/netkit.conf"
