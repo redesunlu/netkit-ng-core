@@ -729,4 +729,7 @@ if [ "$VM_CON0" = "none" ]; then
    REDIRECT_CONSOLE=">/dev/null 2>&1"
 fi
 
+### Setting locale for new gnome-terminal instance to fix errors in some systems ###
+KERNELCMD="LC_ALL=C.UTF-8 $KERNELCMD"
+
 run_command "$JUST_PRINT" "$KERNELCMD" "{ $WAKEUP_PORTHELPER $REMOVE_FS_COMMAND $KERNELCMD; cleanHubs $HUBLIST; } $REDIRECT_CONSOLE $BACKGROUND"
