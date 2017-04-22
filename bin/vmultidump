@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -e
+
+NETKIT_CAPTURAS=~/netkit/capturas
+
+trap ctrl_c_cleanup INT
+
+function ctrl_c_cleanup () {
+    mergecap $NETKIT_CAPTURAS/vdump_*.pcap -w $NETKIT_CAPTURAS/captura.pcap
+    rm $NETKIT_CAPTURAS/vdump_*.pcap || true
+}
+
+test -d $NETKIT_CAPTURAS || mkdir -p $NETKIT_CAPTURAS
+rm $NETKIT_CAPTURAS/vdump_*.pcap || true
+
+echo "Capturando trafico en los dominios indicados."
+echo "La captura se almacenara en $NETKIT_CAPTURAS/captura.pcap"
+echo "Finalice el proceso de captura con Ctrl+C"
+
+for DOMAIN in $*; do
+    vdump $DOMAIN > $NETKIT_CAPTURAS/vdump_$DOMAIN.pcap&
+done
+wait
+
