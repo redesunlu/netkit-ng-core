@@ -2,24 +2,70 @@
 
 set -e
 
-NETKIT_CAPTURAS=~/netkit/capturas
+SCRIPTNAME=`basename $0`
+NETKIT_DUMPS="/tmp"
+MERGECAP=`which mergecap` || true
 
-trap ctrl_c_cleanup INT
 
-function ctrl_c_cleanup () {
-    mergecap $NETKIT_CAPTURAS/vdump_*.pcap -w $NETKIT_CAPTURAS/captura.pcap
-    rm $NETKIT_CAPTURAS/vdump_*.pcap || true
+help () {
+    echo "Usage: $SCRIPTNAME domains > dump.pcap"
+    cat <<EOF
+
+This command captures frames from multiple collision domains
+and writes them, in order, to standard output.
+
+Example:
+
+    $SCRIPTNAME A B C > dump.pcap
+
+Please test and report bugs to https://github.com/redesunlu/netkit-ng-core/
+EOF
+    exit 1
 }
 
-test -d $NETKIT_CAPTURAS || mkdir -p $NETKIT_CAPTURAS
-rm $NETKIT_CAPTURAS/vdump_*.pcap || true
 
-echo "Capturando trafico en los dominios indicados."
-echo "La captura se almacenara en $NETKIT_CAPTURAS/captura.pcap"
-echo "Finalice el proceso de captura con Ctrl+C"
+test_if_netkit_defined () {
+    if [ -z "$NETKIT_HOME" ]; then
+        echo 1>&2 "$SCRIPTNAME: The NETKIT_HOME environment variable is not properly set;"
+        echo 1>&2 "please set it as described in the Netkit documentation and try again."
+        exit 1
+    fi
+}
 
-for DOMAIN in $*; do
-    vdump $DOMAIN > $NETKIT_CAPTURAS/vdump_$DOMAIN.pcap&
-done
-wait
 
+test_if_mergecap_available () {
+    if [ -z "$MERGECAP" ]; then
+        echo 1>&2 "Could not find the mergecap utility."
+        echo 1>&2 "Please install the wireshark-common package and try again."
+        exit 1
+    fi
+}
+
+
+start_vdumps () {
+    NETKIT_DUMPS=`mktemp --tmpdir -d vmultidump.XXXXXX`
+    trap ctrl_c_cleanup INT
+
+    (>&2 echo "Capturing from $* domains ... Press Ctrl+C to end capture")
+
+    for DOMAIN in $*; do
+        vdump $DOMAIN > $NETKIT_DUMPS/vdump_$DOMAIN.pcap&
+    done
+    wait
+}
+
+
+ctrl_c_cleanup () {
+    find $NETKIT_DUMPS -maxdepth 1 -type f -size 0 -delete   # delete empty dumps
+    $MERGECAP $NETKIT_DUMPS/vdump_*.pcap -w -
+    rm $NETKIT_DUMPS/vdump_*.pcap || true
+}
+
+
+# main
+if [[ -z "$1" ]]; then
+    help
+fi
+test_if_netkit_defined
+test_if_mergecap_available
+start_vdumps $*
